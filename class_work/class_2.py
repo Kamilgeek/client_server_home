@@ -1,0 +1,6 @@
+file = open('data/read.txt')
+# print(file.read())
+# print(file.readline())
+print(file.readlines(16))
+print(file.readlines(32))
+print(file.readlines(64))
