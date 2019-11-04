@@ -1,4 +1,5 @@
-import csv
+import csv, json
+from pprint import pprint
 
 # with open('data/read.csv') as file:
 #     reader = csv.reader(file)
@@ -34,10 +35,19 @@ data = [{'header1': 'data1', 'header2' : 'data2', 'header3' : 'data3', 'header4'
          {'header1': 'data1', 'header2' : 'data2', 'header3' : 'data3', 'header4' : 'data4'},
          {'header1': 'data1', 'header2' : 'data2', 'header3' : 'data3', 'header4' : 'data4'},
          {'header1': 'data1', 'header2' : 'data2', 'header3' : 'data3', 'header4' : 'data4'}]
-
-headers =  ['header1', 'header2', 'header3', 'header4']
-with open('data/write.csv', 'w') as file:
-    writer = csv.DictWriter(file, fieldnames=headers)
-    writer.writeheader()
-    for row in data:
-        writer.writerow(row)
+#
+# headers =  ['header1', 'header2', 'header3', 'header4']
+# with open('data/write.csv', 'w') as file:
+#     writer = csv.DictWriter(file, fieldnames=headers)
+#     writer.writeheader()
+#     for row in data:
+#         writer.writerow(row)
+#
+# with open('data/read.json') as file:
+#
+#
+# with open('data/read.json') as file:
+#     raw = file.read()
+#     pprint(json.loads(raw))
+with open('data/write.json', 'w') as file:
+    json.dump(data, file, indent=4)
