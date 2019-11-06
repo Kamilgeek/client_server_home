@@ -63,3 +63,4 @@ data = {
 }
 with open('data/write.yml', 'w') as file:
     yaml.dump(data, file, Dumper=yaml.Dumper)
+

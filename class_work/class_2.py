@@ -28,6 +28,6 @@
 # with open('data/write.txt', 'r+') as file:
 #     print(file.read())
 #     file.write('Another text!\n')
-with open('data/write.txt', 'rb+') as file:
-    print(file.read())
-    file.write(b'Another text')
+# with open('data/write.txt', 'rb+') as file:
+#     print(file.read())
+#     file.write(b'Another text')
