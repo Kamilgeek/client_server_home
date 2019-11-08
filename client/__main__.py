@@ -1,13 +1,13 @@
 import timestamp
 import yaml
-from  socket import socket
+from socket import socket
 from argparse import ArgumentParser
 
 parser = ArgumentParser()
 
 parser.add_argument(
     '-c', '--config', type=str,
-    required=False, help = 'Sets config file path'
+    required=False, help='Sets config file path'
 )
 
 args = parser.parse_args()
@@ -32,9 +32,9 @@ print(f'Client was started')
 
 data = input('Enter data:')
 msg_to_server = {
-        'action': "presence",
-        'data': data,
-        'time': timestamp
+    'action': 'presence',
+    'data': data,
+    'time': timestamp()
 }
 
 sock.send(str(msg_to_server).encode())
