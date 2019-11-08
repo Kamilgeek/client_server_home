@@ -1,3 +1,4 @@
+import timestamp
 import yaml
 from  socket import socket
 from argparse import ArgumentParser
@@ -30,8 +31,13 @@ sock.connect((host, port))
 print(f'Client was started')
 
 data = input('Enter data:')
+msg_to_server = {
+        'action': "presence",
+        'data': data,
+        'time': timestamp
+}
 
-sock.send(data.encode())
+sock.send(str(msg_to_server).encode())
 print(f'Client send data: {data}')
 b_response = sock.recv(defaul_config.get('buffersize'))
 print(b_response.decode())
