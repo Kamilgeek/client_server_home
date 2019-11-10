@@ -1,7 +1,7 @@
-import timestamp
 import yaml, json
 from socket import socket
 from argparse import ArgumentParser
+from datetime import datetime
 
 parser = ArgumentParser()
 
@@ -39,6 +39,7 @@ data = input('Enter data:')
 # }
 request = {
     'action': action,
+    'time': datetime.now().timestamp(),
     'data': data,
 }
 
