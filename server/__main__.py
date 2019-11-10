@@ -1,4 +1,4 @@
-import yaml
+import yaml, json
 from socket import socket
 from argparse import ArgumentParser
 
@@ -33,8 +33,14 @@ try:
         client, addres = sock.accept()
         print(f'client was connected with {addres[0]}:{addres[1]}')
         b_request= client.recv(defaul_config.get('buffersize'))
-        print(f'Client send message: {b_request.decode()}')
-        client.send(b_request)
+        request = json.loads(b_request.decode())
+
+        action = request.get('action')
+
+        if action == 'echo':
+            print(f'Client send message: {b_request.decode()}')
+            client.send(b_request)
+
         client.close()
 except KeyboardInterrupt:
     print('server shutdown')
