@@ -32,11 +32,7 @@ print(f'Client was started')
 
 action = input('Enter action:')
 data = input('Enter data:')
-# msg_to_server = {
-#     'action': 'presence',
-#     'data': data,
-#     'time': timestamp()
-# }
+
 request = {
     'action': action,
     'time': datetime.now().timestamp(),

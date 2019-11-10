@@ -1,7 +1,7 @@
 import yaml, json
 from socket import socket
 from argparse import ArgumentParser
-from .protocol import validate_request, make_response
+from protocol import validate_request, make_response
 
 parser = ArgumentParser()
 
@@ -42,7 +42,6 @@ try:
             if action == 'echo':
                 try:
                     print(f'Client send message: {b_request.decode()}')
-                    # client.send(b_request)
                     response = make_response(request, 200, request.get('data'))
                 except Exception as err:
                     response = make_response(request, 500, 'Internal server error')
