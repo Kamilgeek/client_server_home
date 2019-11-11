@@ -1,7 +1,7 @@
-import timestamp
-import yaml
+import yaml, json
 from socket import socket
 from argparse import ArgumentParser
+from datetime import datetime
 
 parser = ArgumentParser()
 
@@ -30,14 +30,17 @@ sock.connect((host, port))
 
 print(f'Client was started')
 
+action = input('Enter action:')
 data = input('Enter data:')
-msg_to_server = {
-    'action': 'presence',
+
+request = {
+    'action': action,
+    'time': datetime.now().timestamp(),
     'data': data,
-    'time': timestamp()
 }
 
-sock.send(str(msg_to_server).encode())
+s_request = json.dumps(request)
+sock.send(s_request.encode())
 print(f'Client send data: {data}')
 b_response = sock.recv(defaul_config.get('buffersize'))
 print(b_response.decode())
