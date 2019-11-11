@@ -1,6 +1,7 @@
 import yaml, json
 from socket import socket
 from argparse import ArgumentParser
+from resolvers import resolve
 from protocol import validate_request, make_response
 
 parser = ArgumentParser()
@@ -37,18 +38,22 @@ try:
         request = json.loads(b_request.decode())
 
         if validate_request(request):
-            action = request.get('action')
+            action_name = request.get('action')
+            controller = resolve(action_name)
 
-            if action == 'echo':
+            if controller:
                 try:
-                    print(f'Client send message: {b_request.decode()}')
-                    response = make_response(request, 200, request.get('data'))
+                    print(f'Controller {action_name} resolved with request{request}')
+                    response = controller(request)
                 except Exception as err:
+                    print(f'Controller {action_name} error: {err}')
                     response = make_response(request, 500, 'Internal server error')
             else:
-                response = make_response(request, 404, f'Action with name {action} not supported')
+                print(f'Controller {action_name} not found')
+                response = make_response(request, 404, f'Action with name {action_name} not supported')
         else:
-            response = make_response(request, 400, 'wrong requst format')
+            print(f'Controller wrong request {request}')
+            response = make_response(request, 400, 'wrong request format')
 
         client.send(
             json.dumps(response).encode()
