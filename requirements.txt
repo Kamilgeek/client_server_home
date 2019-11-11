@@ -2,3 +2,4 @@ requests
 chardet
 pyyaml
 pytest
+pytest-cov
