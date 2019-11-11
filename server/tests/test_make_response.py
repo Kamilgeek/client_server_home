@@ -24,14 +24,17 @@ def code_fixture():
 
 
 @pytest.fixture
-def response_fixture(action_fixture, time_fixture, data_fixture, code_fixture):
+def request_fixture(action_fixture, time_fixture, data_fixture):
     return {
         'action': action_fixture,
         'time': time_fixture,
         'data': data_fixture,
-        'code': code_fixture
     }
 
+
+def test_valid_make_response(request_fixture, code_fixture, data_fixture):
+    response = make_response(request_fixture, code_fixture, data_fixture)
+    assert response.get('code') == code_fixture
 
 # TIME = datetime.now().timestamp()
 # CODE = 200
@@ -50,6 +53,6 @@ def response_fixture(action_fixture, time_fixture, data_fixture, code_fixture):
 # }
 
 
-def test_valid_make_response():
-    response = make_response(REQUEST, CODE, 'message')
-    assert response.get('code') == CODE
+# def test_valid_make_response():
+#     response = make_response(REQUEST, CODE, 'message')
+#     assert response.get('code') == CODE
