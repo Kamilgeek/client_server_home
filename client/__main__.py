@@ -28,7 +28,7 @@ logger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter(f'%(levelname)-10s %(asctime)s %(message)s')
 
-handler = logging.FileHandler('main.log')
+handler = logging.FileHandler('log/client.log')
 handler.setFormatter(formatter)
 handler.setLevel(logging.DEBUG)
 
@@ -57,4 +57,4 @@ sock.send(s_request.encode())
 logger.info(f'Client send data: {data}')
 b_response = sock.recv(defaul_config.get('buffersize'))
 logger.info(b_response.decode())
-# print(b_response.decode())
+

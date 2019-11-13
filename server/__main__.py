@@ -30,7 +30,7 @@ logger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter(f'%(levelname)-10s %(asctime)s %(message)s')
 
-handler = logging.FileHandler('main.log')
+handler = logging.FileHandler('log/server.log')
 handler.setFormatter(formatter)
 handler.setLevel(logging.DEBUG)
 
