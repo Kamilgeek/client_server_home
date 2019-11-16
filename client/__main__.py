@@ -1,4 +1,6 @@
-import yaml, json, logging
+import yaml
+import json
+import logging
 from socket import socket
 from argparse import ArgumentParser
 from datetime import datetime
