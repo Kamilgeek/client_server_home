@@ -25,16 +25,7 @@ if args.config:
         file_config = yaml.load(file, Loader=yaml.Loader)
         defaul_config.update(file_config)
 
-# logger = logging.getLogger('main')
-# logger.setLevel(logging.DEBUG)
-#
-# formatter = logging.Formatter(f'%(levelname)-10s %(asctime)s %(message)s')
-#
-# handler = logging.FileHandler('log/client.log')
-# handler.setFormatter(formatter)
-# handler.setLevel(logging.DEBUG)
-#
-# logger.addHandler(handler)
+
 
 logging.basicConfig(
     level=logging.DEBUG,
