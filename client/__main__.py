@@ -1,4 +1,4 @@
-import yaml, json
+import yaml, json, logging
 from socket import socket
 from argparse import ArgumentParser
 from datetime import datetime
@@ -23,12 +23,25 @@ if args.config:
         file_config = yaml.load(file, Loader=yaml.Loader)
         defaul_config.update(file_config)
 
+logger = logging.getLogger('main')
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter(f'%(levelname)-10s %(asctime)s %(message)s')
+
+handler = logging.FileHandler('log/client.log')
+handler.setFormatter(formatter)
+handler.setLevel(logging.DEBUG)
+
+logger.addHandler(handler)
+
+
+
 host, port = defaul_config.get('host'), defaul_config.get('port')
 
 sock = socket()
 sock.connect((host, port))
 
-print(f'Client was started')
+logger.info(f'Client was started')
 
 action = input('Enter action:')
 data = input('Enter data:')
@@ -41,6 +54,7 @@ request = {
 
 s_request = json.dumps(request)
 sock.send(s_request.encode())
-print(f'Client send data: {data}')
+logger.info(f'Client send data: {data}')
 b_response = sock.recv(defaul_config.get('buffersize'))
-print(b_response.decode())
+logger.info(b_response.decode())
+
