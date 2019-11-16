@@ -25,16 +25,25 @@ if args.config:
         file_config = yaml.load(file, Loader=yaml.Loader)
         defaul_config.update(file_config)
 
-logger = logging.getLogger('main')
-logger.setLevel(logging.DEBUG)
+# logger = logging.getLogger('main')
+# logger.setLevel(logging.DEBUG)
+#
+# formatter = logging.Formatter(f'%(levelname)-10s %(asctime)s %(message)s')
+#
+# handler = logging.FileHandler('log/client.log')
+# handler.setFormatter(formatter)
+# handler.setLevel(logging.DEBUG)
+#
+# logger.addHandler(handler)
 
-formatter = logging.Formatter(f'%(levelname)-10s %(asctime)s %(message)s')
-
-handler = logging.FileHandler('log/client.log')
-handler.setFormatter(formatter)
-handler.setLevel(logging.DEBUG)
-
-logger.addHandler(handler)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(levelname)-10s %(asctime)s %(message)s',
+    handlers = [
+        logging.FileHandler('log/client.log', encoding='utf-8'),
+        logging.StreamHandler()
+    ]
+)
 
 
 
@@ -43,7 +52,7 @@ host, port = defaul_config.get('host'), defaul_config.get('port')
 sock = socket()
 sock.connect((host, port))
 
-logger.info(f'Client was started')
+logging.info(f'Client was started')
 
 action = input('Enter action:')
 data = input('Enter data:')
@@ -56,7 +65,7 @@ request = {
 
 s_request = json.dumps(request)
 sock.send(s_request.encode())
-logger.info(f'Client send data: {data}')
+logging.info(f'Client send data: {data}')
 b_response = sock.recv(defaul_config.get('buffersize'))
-logger.info(b_response.decode())
+logging.info(b_response.decode())
 
