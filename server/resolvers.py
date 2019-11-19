@@ -1,6 +1,8 @@
 from functools import reduce
 from settings import INSTALLED_MODULES
+from decorators import log
 
+@log
 def get_server_actions():
     modules = reduce(
         lambda value, item: value + [__import__(f'{item}.actions')], INSTALLED_MODULES, []

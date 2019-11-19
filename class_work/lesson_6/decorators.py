@@ -1,6 +1,9 @@
+import logging
+import inspect
 from functools import wraps
+from datetime import datetime
 
-
+logger = logging.getLogger('decorators')
 # def sample(text, num):
 #     return text * num
 #
@@ -18,23 +21,54 @@ from functools import wraps
 # def sample(text, num):
 #      return text * num
 
-# sample('text', 3)
-
-def delimited(func):
-    def wrapper(*args, **kwargs):
-        print('*' * 50)
-        return func(*args, **kwargs)
-    return wrapper
-
-# @logged
-# @delimited
-# def sample(text, num):
-#      return text * num
-
-# sample('text', 3)
-
+# # sample('text', 3)
+#
+# def delimited(func):
+#     def wrapper(*args, **kwargs):
+#         print('*' * 50)
+#         return func(*args, **kwargs)
+#     return wrapper
+#
+# # @logged
+# # @delimited
+# # def sample(text, num):
+# #      return text * num
+#
+# # sample('text', 3)
+#
+# # def logged(log_format):
+# #     def decorator(func):
+# #         def wrapper(text, num):
+# #             result = func(text, num)
+# #             name = func.__name__
+# #             args = ','.join((text, str(num)))
+# #             print(log_format % {'name': name, 'args': args, 'result': result})
+# #             return result
+# #         return wrapper
+# #     return decorator
+# #
+# #
+# # def sample(text, num):
+# #     return text * num
+# #
+# # decorator = logged('%(name)s(%(args)s) = %(result)s')
+# # sample_clone = decorator(sample)
+# # sample_clone('sample', 2)
+#
+# # def logged(log_format):
+# #     def decorator(func):
+# #         def wrapper(text, num):
+# #             result = func(text, num)
+# #             name = func.__name__
+# #             args = ','.join((text, str(num)))
+# #             print(log_format % {'name': name, 'args': args, 'result': result})
+# #             return result
+# #         return wrapper
+# #     return decorator
+#
 # def logged(log_format):
 #     def decorator(func):
+#         @wraps(func)
 #         def wrapper(text, num):
 #             result = func(text, num)
 #             name = func.__name__
@@ -45,41 +79,27 @@ def delimited(func):
 #     return decorator
 #
 #
+#
+# @logged('%(name)s(%(args)s) = %(result)s')
 # def sample(text, num):
 #     return text * num
 #
-# decorator = logged('%(name)s(%(args)s) = %(result)s')
-# sample_clone = decorator(sample)
-# sample_clone('sample', 2)
+# sample('sample', 4)
+# print(sample.__name__)
 
-# def logged(log_format):
-#     def decorator(func):
-#         def wrapper(text, num):
-#             result = func(text, num)
-#             name = func.__name__
-#             args = ','.join((text, str(num)))
-#             print(log_format % {'name': name, 'args': args, 'result': result})
-#             return result
-#         return wrapper
-#     return decorator
+def log(func):
+    @wraps(func)
+    def wrapper( *args, **kwargs):
+        print(f'{datetime.now()}, была вызвана функция {func.__name__} из функции {inspect.stack()[1][3]}')
+        # logger.debug(f'{datetime.now()}, была вызвана функция {func.__name__} из функции {inspect.stack()}')
+        return func( *args, **kwargs)
+    return wrapper
+@log
+def func_z():
+    pass
 
-def logged(log_format):
-    def decorator(func):
-        @wraps(func)
-        def wrapper(text, num):
-            result = func(text, num)
-            name = func.__name__
-            args = ','.join((text, str(num)))
-            print(log_format % {'name': name, 'args': args, 'result': result})
-            return result
-        return wrapper
-    return decorator
+def second():
+    func_z()
 
+second()
 
-
-@logged('%(name)s(%(args)s) = %(result)s')
-def sample(text, num):
-    return text * num
-
-sample('sample', 4)
-print(sample.__name__)
