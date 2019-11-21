@@ -51,7 +51,7 @@ try:
         logging.info(f'client was connected with {addres[0]}:{addres[1]}')
         b_request = client.recv(defaul_config.get('buffersize'))
         b_response = handle_default_request(b_request)
-        
+
         client.send(
             b_response
         )

@@ -1,4 +1,5 @@
 import yaml
+import zlib
 import json
 import logging
 import hashlib
@@ -62,8 +63,13 @@ request = {
 }
 
 s_request = json.dumps(request)
-sock.send(s_request.encode())
+b_request = zlib.compress(s_request.encode())
+
+sock.send(b_request)
+
 logging.info(f'Client send data: {data}')
-b_response = sock.recv(defaul_config.get('buffersize'))
+compressed_response = sock.recv(defaul_config.get('buffersize'))
+b_response = zlib.decompress(compressed_response)
+
 logging.info(b_response.decode())
 

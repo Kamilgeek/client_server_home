@@ -5,8 +5,9 @@ from resolvers import resolve
 from protocol import (
     validate_request, make_response
 )
+from middlewares import compression_middlevare
 
-
+@compression_middlevare
 def handle_default_request(raw_request):
     request = json.loads(raw_request.decode())
 
