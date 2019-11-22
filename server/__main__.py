@@ -1,4 +1,5 @@
 import yaml
+import select
 import json
 import logging
 from socket import socket
@@ -28,34 +29,51 @@ if args.config:
         defaul_config.update(file_config)
 host, port = defaul_config.get('host'), defaul_config.get('port')
 
-
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(levelname)-10s %(asctime)s %(message)s',
-    handlers = [
+    handlers=[
         logging.FileHandler('log/server.log', encoding='utf-8'),
         logging.StreamHandler()
     ]
 )
 
+requests = []
+connections = []
 
 try:
     sock = socket()
     sock.bind((host, port))
+    sock.settimeout(0)
     sock.listen(5)
 
     logging.info(f'Server was started with {host}:{port}')
 
     while True:
-        client, addres = sock.accept()
-        logging.info(f'client was connected with {addres[0]}:{addres[1]}')
-        b_request = client.recv(defaul_config.get('buffersize'))
-        b_response = handle_default_request(b_request)
+        try:
+            client, addres = sock.accept()
+            connections.append(client)
+            logging.info(f'client was connected with {addres[0]}:{addres[1]} | Connections: {connections}')
+        except:
+            pass
 
-        client.send(
-            b_response
+
+        rlist, wlist, xlist = select.select(
+            connections, connections, connections, 0
         )
 
-        client.close()
+        for r_client in rlist:
+            b_request = r_client.recv(defaul_config.get('buffersize'))
+            requests.append(b_request)
+
+        if requests:
+            b_request = requests.pop()
+            b_response = handle_default_request(b_request)
+
+            for w_client in wlist:
+                w_client.send(b_response)
+
+
+
 except KeyboardInterrupt:
     logging.info('server shutdown')
