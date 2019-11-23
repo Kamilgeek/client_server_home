@@ -1,4 +1,6 @@
-import yaml, json, logging
+import yaml
+import json
+import logging
 from socket import socket
 from argparse import ArgumentParser
 from resolvers import resolve
@@ -25,27 +27,27 @@ if args.config:
         defaul_config.update(file_config)
 host, port = defaul_config.get('host'), defaul_config.get('port')
 
-logger = logging.getLogger('main')
-logger.setLevel(logging.DEBUG)
 
-formatter = logging.Formatter(f'%(levelname)-10s %(asctime)s %(message)s')
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(levelname)-10s %(asctime)s %(message)s',
+    handlers = [
+        logging.FileHandler('log/server.log', encoding='utf-8'),
+        logging.StreamHandler()
+    ]
+)
 
-handler = logging.FileHandler('log/server.log')
-handler.setFormatter(formatter)
-handler.setLevel(logging.DEBUG)
-
-logger.addHandler(handler)
 
 try:
     sock = socket()
     sock.bind((host, port))
     sock.listen(5)
 
-    logger.info(f'Server was started with {host}:{port}')
+    logging.info(f'Server was started with {host}:{port}')
 
     while True:
         client, addres = sock.accept()
-        logger.info(f'client was connected with {addres[0]}:{addres[1]}')
+        logging.info(f'client was connected with {addres[0]}:{addres[1]}')
         b_request = client.recv(defaul_config.get('buffersize'))
         request = json.loads(b_request.decode())
 
@@ -55,16 +57,16 @@ try:
 
             if controller:
                 try:
-                    logger.debug(f'Controller {action_name} resolved with request{request}')
+                    logging.debug(f'Controller {action_name} resolved with request{request}')
                     response = controller(request)
                 except Exception as err:
-                    logger.critical(f'Controller {action_name} error: {err}')
+                    logging.critical(f'Controller {action_name} error: {err}')
                     response = make_response(request, 500, 'Internal server error')
             else:
-                logger.error(f'Controller {action_name} not found')
+                logging.error(f'Controller {action_name} not found')
                 response = make_response(request, 404, f'Action with name {action_name} not supported')
         else:
-            logger.error(f'Controller wrong request {request}')
+            logging.error(f'Controller wrong request {request}')
             response = make_response(request, 400, 'wrong request format')
 
         client.send(
@@ -73,4 +75,4 @@ try:
 
         client.close()
 except KeyboardInterrupt:
-    logger.info('server shutdown')
+    logging.info('server shutdown')
