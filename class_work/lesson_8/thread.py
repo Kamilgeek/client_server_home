@@ -3,10 +3,14 @@ import threading
 
 THREADS_NUM = 5
 
+lock = threading.Lock()
+
 def sample(name, num):
     for itm in range(1, num+1):
         time.sleep(1)
+        lock.acquire()
         print(f'{name} was called {itm} times')
+        lock.release()
 
 # thread = threading.Thread(target=sample, args=('thread', 10))
 # thread.start()

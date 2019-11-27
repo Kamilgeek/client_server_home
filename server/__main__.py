@@ -1,12 +1,29 @@
 import yaml
 import select
+import threading
 import json
 import logging
 from socket import socket
 from argparse import ArgumentParser
 from handlers import handle_default_request
-from resolvers import resolve
-from protocol import validate_request, make_response
+
+
+def read(sock, connections, requests, buffersize):
+    try:
+        bytes_request = sock.recv(buffersize)
+    except Exception:
+        connections.remove(sock)
+    else:
+        if bytes_request:
+            requests.append(bytes_request)
+
+
+def write(sock, connections, response):
+    try:
+        sock.send(response)
+    except Exception:
+        connections.remove(sock)
+
 
 parser = ArgumentParser()
 
@@ -57,21 +74,25 @@ try:
         except:
             pass
 
-
         rlist, wlist, xlist = select.select(
             connections, connections, connections, 0
         )
 
         for r_client in rlist:
-            b_request = r_client.recv(defaul_config.get('buffersize'))
-            requests.append(b_request)
+            r_thread =  threading.Thread(
+                target=read, args=(r_client,connections, requests, defaul_config.get('buffersize'))
+            )
+            r_thread.start()
 
         if requests:
             b_request = requests.pop()
             b_response = handle_default_request(b_request)
 
             for w_client in wlist:
-                w_client.send(b_response)
+                w_thread = threading.Thread(
+                    target=write, args=(w_client, connections, b_response)
+                )
+                w_thread.start()
 
 
 
