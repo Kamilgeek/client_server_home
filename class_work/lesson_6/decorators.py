@@ -87,19 +87,3 @@ logger = logging.getLogger('decorators')
 # sample('sample', 4)
 # print(sample.__name__)
 
-def log(func):
-    @wraps(func)
-    def wrapper( *args, **kwargs):
-        print(f'{datetime.now()}, была вызвана функция {func.__name__} из функции {inspect.stack()[1][3]}')
-        # logger.debug(f'{datetime.now()}, была вызвана функция {func.__name__} из функции {inspect.stack()}')
-        return func( *args, **kwargs)
-    return wrapper
-@log
-def func_z():
-    pass
-
-def second():
-    func_z()
-
-second()
-
