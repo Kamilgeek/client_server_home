@@ -4,7 +4,7 @@ import logging
 from socket import socket
 
 
-class Aplication:
+class Application:
     def __init__(self, host, port, buffersize, handler):
         self._host = host
         self._port = port
@@ -75,3 +75,6 @@ class Aplication:
         except KeyboardInterrupt:
             logging.info('server shutdown')
 
+class CustomApplication(Application):
+    def read(self, sock):
+        super(CustomApplication, self).read(sock)

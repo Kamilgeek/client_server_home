@@ -4,7 +4,7 @@ import threading
 import logging
 import json
 
-from app import Aplication
+from app import Application
 from socket import socket
 from argparse import ArgumentParser
 from handlers import handle_default_request
@@ -38,7 +38,7 @@ logging.basicConfig(
     ]
 )
 
-app = Aplication(
+app = Application(
     defaul_config.get('host'),
     defaul_config.get('port'),
     defaul_config.get('buffersize'),
