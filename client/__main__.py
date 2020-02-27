@@ -1,19 +1,10 @@
 import yaml
-import zlib
-import json
 import logging
-import hashlib
-import threading
-from socket import socket
 from argparse import ArgumentParser
-from datetime import datetime
+
+from app import Application
 
 
-def read(sock, buffersize):
-    while True:
-        compressed_response = sock.recv(buffersize)
-        b_response = zlib.decompress(compressed_response)
-        logging.info(b_response.decode())
 
 
 
@@ -45,46 +36,8 @@ logging.basicConfig(
         logging.StreamHandler()
     ]
 )
-
-host, port = defaul_config.get('host'), defaul_config.get('port')
-
-
-
-sock = socket()
-sock.connect((host, port))
-
-logging.info(f'Client was started')
-
-try:
-    read_thread = threading.Thread(
-        target=read, args=(sock, defaul_config.get('buffersize'))
-    )
-    read_thread.start()
-
-    while True:
-        hash_obj = hashlib.sha256()
-        hash_obj.update(
-            str(datetime.now().timestamp()).encode()
-        )
-
-        action = input('Enter action:')
-        data = input('Enter data:')
-
-        request = {
-            'action': action,
-            'time': datetime.now().timestamp(),
-            'data': data,
-            'token': hash_obj.hexdigest()
-        }
-
-        s_request = json.dumps(request)
-        b_request = zlib.compress(s_request.encode())
-
-        sock.send(b_request)
-
-        logging.info(f'Client send data: {data}')
-
-
-except KeyboardInterrupt:
-    sock.close()
-    print('Client shutdown')
+with Application(defaul_config.get('host'),
+                 defaul_config.get('port'),
+                 defaul_config.get('buffersize')) as app:
+    app.connect()
+    app.run()
